@@ -1,6 +1,7 @@
 import paramiko, datetime
 from pathlib import Path
 from prettytable import PrettyTable
+from mac_vendor_lookup import MacLookup
 from os import path
 
 class DhcpServer:
@@ -21,7 +22,13 @@ class DhcpServer:
         for line in stdout:
             l = line.strip('\n').split(" ")
             dt = datetime.datetime.fromtimestamp(int(l[0])).strftime('%c')
-            one_lease = {'until': dt, 'mac': l[1], 'ip': l[2], 'hostname': l[3]}
+
+            try:
+                v = MacLookup().lookup(l[1])
+            except:
+                v = "<unknown>"
+
+            one_lease = {'until': dt, 'mac': l[1], 'ip': l[2], 'hostname': l[3], 'vendor': v}
             self.leases.append(one_lease)
 
     def pprint_leases(self):
