@@ -8,7 +8,11 @@ CONFIG = configparser.ConfigParser()
 CONFIG.read(CONF_PATH)
 
 def default_func(arg):
-    d = DhcpServer(CONFIG['SSH']['IP'])
+    d = DhcpServer(
+            server_ip=CONFIG['SSH']['IP'],
+            user=CONFIG['SSH']['USER'],
+            lease_file=CONFIG['SSH']['LEASE_FILE'],
+            )
     d.pprint_leases()
 
 def get_parser():
