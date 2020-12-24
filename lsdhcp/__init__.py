@@ -4,6 +4,14 @@ from prettytable import PrettyTable
 from mac_vendor_lookup import MacLookup
 from os import path
 
+MISC_MAC = {
+        '52:54:00':'QEMU',
+        '00:50:56':'VMWare',
+        '00:16:3e':'Xen Source',
+        '00:ca:fe':'Xen',
+        '00:15:5d':'Microsoft',
+        }
+
 class DhcpServer:
     def __init__(self, server_ip, user='root', key_path=None, lease_file='/tmp/dhcp.leases'):
         if key_path is None:
@@ -26,7 +34,7 @@ class DhcpServer:
             try:
                 v = MacLookup().lookup(l[1])
             except:
-                v = "<unknown>"
+                v = MISC_MAC.get(l[1][:8], '<unknown>')
 
             one_lease = {'until': dt, 'mac': l[1], 'ip': l[2], 'hostname': l[3], 'vendor': v}
             self.leases.append(one_lease)
